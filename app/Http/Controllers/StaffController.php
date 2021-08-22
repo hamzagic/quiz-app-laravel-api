@@ -15,8 +15,8 @@ class StaffController extends Controller
             'last_name' => 'required|min:3|max:255|String',
             'email' => 'required|email',
             'password' => 'required|min:5|string',
-            'role_id' => 'required|integer',
-            'subject_id' => 'required|integer'
+            'role_id' => 'required|integer|exists:role,id',
+            'subject_id' => 'required|integer|exists:subject,id'
         ]);
 
         if ($validator->fails()) {
@@ -25,6 +25,7 @@ class StaffController extends Controller
                 "error" => $validator->errors()->all()
             ]);
         }
+
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');
         $email = $request->input('email');

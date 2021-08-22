@@ -36,8 +36,6 @@ class Staff extends Model
     ];
 
     // todo encrypt password
-    // verify subject_id
-    // verify role_id
     public function create($data)
     {
         $emailExists = $this->checkIfEmailExists($data['email']);
