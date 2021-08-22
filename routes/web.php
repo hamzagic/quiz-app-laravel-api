@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 require_once '../routes/endpoints/role.php';
+require_once '../routes/endpoints/subject.php';
+require_once '../routes/endpoints/staff.php';
 
 Route::post('/quiz', [QuizController::class, 'create']);
 

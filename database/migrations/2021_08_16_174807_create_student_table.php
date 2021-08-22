@@ -20,7 +20,7 @@ class CreateStudentTable extends Migration
         });
         Schema::create('subject', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255);
+            $table->string('name', 255)->unique();
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
@@ -28,7 +28,7 @@ class CreateStudentTable extends Migration
             $table->id();
             $table->string('first_name', 255);
             $table->string('last_name', 255);
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('password');
             $table->boolean('active')->default(true);
             $table->integer('role_id')->references('id')->on('role');
@@ -47,7 +47,7 @@ class CreateStudentTable extends Migration
             $table->id();
             $table->string('first_name', 255);
             $table->string('last_name', 255);
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('password');
             $table->boolean('active')->default(true);
             $table->integer('school_id')->references('id')->on('school');
