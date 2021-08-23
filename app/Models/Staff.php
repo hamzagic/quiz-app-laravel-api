@@ -18,11 +18,11 @@ class Staff extends Model
      * @var array
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
+        'staff_first_name',
+        'staff_last_name',
+        'staff_email',
         'password',
-        'active',
+        'staff_active',
         'subject_id'
     ];
 
@@ -36,6 +36,7 @@ class Staff extends Model
     ];
 
     // todo encrypt password
+    // todo create method to update password
     public function create($data)
     {
         $emailExists = $this->checkIfEmailExists($data['email']);
@@ -43,9 +44,9 @@ class Staff extends Model
 
         try {
             $staff = DB::table('staff')->insertGetId([
-                'first_name' => $data['first_name'],
-                'last_name' => $data['last_name'],
-                'email' => $data['email'],
+                'staff_first_name' => $data['first_name'],
+                'staff_last_name' => $data['last_name'],
+                'staff_email' => $data['email'],
                 'password' => $data['password'],
                 'role_id' => $data['role_id'],
                 'subject_id' => $data['subject_id'],
@@ -61,7 +62,7 @@ class Staff extends Model
     public function checkIfEmailExists($email)
     {
         $staff = DB::table('staff')
-        ->where('email', '=', $email)
+        ->where('staff_email', '=', $email)
         ->count();
 
         return $staff;
@@ -111,7 +112,7 @@ class Staff extends Model
         return $staff;
     }
 
-    public function updateStaff($name, $id)
+    public function updateStaff($data, $id)
     {
         $result = $this->getByIdCount($id);
         if ($result == 0) return false;
@@ -120,7 +121,11 @@ class Staff extends Model
             DB::table('staff')
             ->where('id', '=', $id)
             ->update([
-                'name' => $name,
+                'staff_first_name' => $data['first_name'],
+                'staff_last_name' => $data['last_name'],
+                'staff_email' => $data['email'],
+                'staff_role_id' => $data['role_id'],
+                'staff_subject_id' => $data['subject_id'],
                 'updated_at' => Carbon::now()
             ]);
             $staff = $this->getById($id);
@@ -141,7 +146,7 @@ class Staff extends Model
             DB::table('staff')
             ->where('id', '=', $id)
             ->update([
-                'active' => !$active->active
+                'staff_active' => !$active->staff_active
             ]);
             return true;
 
@@ -154,18 +159,18 @@ class Staff extends Model
     {
         $response = array(
             'id' => $table->id,
-            'first_name' => $table->first_name,
-            'last_name' => $table->last_name,
-            'email' => $table->email,
+            'first_name' => $table->staff_first_name,
+            'last_name' => $table->staff_last_name,
+            'email' => $table->staff_email,
             'role' => [
                 'role_id' => $table->role_id,
-                'role_title' => $table->title
+                'role_title' => $table->role_title
             ],
             'subject' => [
                 'subject_id' => $table->subject_id,
-                'subject_name' => $table->name,
+                'subject_name' => $table->subject_name,
             ],
-            'active' => $table->active,
+            'active' => $table->staff_active,
             'created_at' => $table->created_at,
             'updated_at' => $table->updated_at,
         );

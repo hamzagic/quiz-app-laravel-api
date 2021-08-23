@@ -18,16 +18,15 @@ class Subject extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'name',
-        'active',
+        'subject_name',
+        'subject_active',
     ];
 
     public function create($name)
     {
         try {
             $subject = DB::table('subject')->insertGetId([
-                'name' => $name,
+                'subject_name' => $name,
                 'created_at' => Carbon::now()
             ]);
             $result = $this->getById($subject);
@@ -60,7 +59,7 @@ class Subject extends Model
         return $subject;
     }
 
-    public function updateRole($name, $id)
+    public function updateSubject($name, $id)
     {
         $result = $this->getByIdCount($id);
         if ($result == 0) return false;
@@ -69,7 +68,7 @@ class Subject extends Model
             DB::table('subject')
             ->where('id', '=', $id)
             ->update([
-                'name' => $name,
+                'subject_name' => $name,
                 'updated_at' => Carbon::now()
             ]);
             $subject = $this->getById($id);

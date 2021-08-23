@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Answer;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class AnswerController extends Controller
+class QuestionController extends Controller
 {
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'content' => 'required|min:3|max:255|string'
+            'title' => 'required|min:3|max:255|String',
+            'alternatives_length' => 'required|integer',
+            'correct_answer_id' => 'required|integer|exists:answer,id',
         ]);
 
         if ($validator->fails()) {
@@ -21,19 +23,23 @@ class AnswerController extends Controller
             ]);
         }
 
-        $content = $request->input('content');
+        $title = $request->input('title');
+        $alternatives_length = $request->input('alternatives_length');
+        $correct_answer_id = $request->input('correct_answer_id');
 
         $data = array(
-            'content' => $content
+            'title' => $title,
+            'alternatives_length' => $alternatives_length,
+            'correct_answer_id' => $correct_answer_id
         );
 
-        $answer = new Answer();
+        $question = new Question();
         try {
-            $result = $answer->create($data);
+            $result = $question->create($data);
 
             if (!$result) return response()->json([
                 "data" => [],
-                "error" => "could not create answer"
+                "error" => "could not create question"
             ], 400);
 
             return response()->json([
@@ -51,8 +57,8 @@ class AnswerController extends Controller
 
     public function list()
     {
-        $answer = new Answer();
-        $result = $answer->list();
+        $question = new Question();
+        $result = $question->list();
 
         return response()->json([
             "data" => $result,
@@ -73,8 +79,8 @@ class AnswerController extends Controller
             ]);
         }
 
-        $answer = new Answer();
-        $result = $answer->getById($id);
+        $question = new Question();
+        $result = $question->getByIdFull($id);
 
         if (!$result) {
             return response()->json([
@@ -89,11 +95,13 @@ class AnswerController extends Controller
         ]);
     }
 
-    public function updateAnswer(Request $request, $id)
+    public function updateQuestion(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'id' => 'integer',
-            'content' => 'required|min:3|max:255|string'
+            'title' => 'required|min:3|max:255|String',
+            'alternatives_length' => 'required|integer',
+            'correct_answer_id' => 'required|integer|exists:answer,id',
         ]);
 
         if ($validator->fails()) {
@@ -102,15 +110,18 @@ class AnswerController extends Controller
                 "error" => $validator->errors()->all()
             ]);
         }
-        $content = $request->input('content');
+        $title = $request->input('title');
+        $alternatives_length = $request->input('alternatives_length');
+        $correct_answer_id = $request->input('correct_answer_id');
 
         $data = array(
-            'content' => $content
+            'title' => $title,
+            'alternatives_length' => $alternatives_length,
+            'correct_answer_id' => $correct_answer_id
         );
 
-        $answer = new Answer();
-
-        $result = $answer->updateAnswer($data, $id);
+        $question = new Question();
+        $result = $question->updateQuestion($data, $id);
 
         if (!$result) return response()->json([
             "data" => [],
@@ -135,15 +146,15 @@ class AnswerController extends Controller
             ], 400);
         }
 
-        $answer = new Answer();
-        $response = $answer->updateStatus($id);
+        $question = new Question();
+        $response = $question->updateStatus($id);
 
         if (!$response) return response()->json([
             "data" => [],
             "error" => "Id not found"
         ], 400);
         return response()->json([
-            "data" => "answer status updated successfully",
+            "data" => "question status updated successfully",
             "error" => []
         ]);
     }

@@ -15,41 +15,41 @@ class CreateStudentTable extends Migration
     {
         Schema::create('role', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 255)->unique();
-            $table->boolean('active')->default(true);
+            $table->string('role_title', 255)->unique();
+            $table->boolean('role_active')->default(true);
         });
         Schema::create('subject', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255)->unique();
-            $table->boolean('active')->default(true);
+            $table->string('subject_name', 255)->unique();
+            $table->boolean('subject_active')->default(true);
             $table->timestamps();
         });
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name', 255);
-            $table->string('last_name', 255);
-            $table->string('email')->unique();
+            $table->string('staff_first_name', 255);
+            $table->string('staff_last_name', 255);
+            $table->string('staff_email')->unique();
             $table->string('password');
-            $table->boolean('active')->default(true);
+            $table->boolean('staff_active')->default(true);
             $table->integer('role_id')->references('id')->on('role');
             $table->integer('subject_id')->references('id')->on('subject')->nullable();
             $table->timestamps();
         });
         Schema::create('school', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255);
-            $table->string('address');
-            $table->boolean('active')->default(true);
+            $table->string('school_name', 255);
+            $table->string('school_address');
+            $table->boolean('school_active')->default(true);
             $table->integer('staff_id')->references('id')->on('staff');
             $table->timestamps();
         });
         Schema::create('student', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name', 255);
-            $table->string('last_name', 255);
-            $table->string('email')->unique();
+            $table->string('student_first_name', 255);
+            $table->string('student_last_name', 255);
+            $table->string('student_email')->unique();
             $table->string('password');
-            $table->boolean('active')->default(true);
+            $table->boolean('student_active')->default(true);
             $table->integer('school_id')->references('id')->on('school');
             $table->timestamps();
         });

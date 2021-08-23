@@ -18,7 +18,7 @@ class Quiz extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'quiz_name',
         'back_button',
         'questions_per_page',
         'start_date',
@@ -30,7 +30,7 @@ class Quiz extends Model
     {
         try {
             $quiz = DB::table('quiz')->insertGetId([
-                'name' => $name,
+                'quiz_name' => $name,
                 'back_button' => $back_button,
                 'questions_per_page' => $questions_per_page,
                 'start_date' => $start_date,
@@ -71,7 +71,7 @@ class Quiz extends Model
                 DB::table('quiz')
                 ->where('id', '=', $data['id'])
                 ->update([
-                    'name' => $data['name'],
+                    'quiz_name' => $data['name'],
                     'back_button' => $data['back_button'],
                     'questions_per_page' => $data['questions_per_page'],
                     'start_date' => $data['start_date'],

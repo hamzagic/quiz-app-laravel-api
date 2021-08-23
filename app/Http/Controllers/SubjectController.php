@@ -28,7 +28,7 @@ class SubjectController extends Controller
 
         if (!$result) return response()->json([
             "data" => [],
-            "error" => "role name already exists"
+            "error" => "subject name already exists"
         ], 400);
 
         return response()->json([

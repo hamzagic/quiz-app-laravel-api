@@ -14,19 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-require_once '../routes/endpoints/role.php';
-require_once '../routes/endpoints/subject.php';
-require_once '../routes/endpoints/staff.php';
-
-Route::post('/quiz', [QuizController::class, 'create']);
-
-Route::get('/quiz', [QuizController::class, 'list']);
-
-Route::get('/quiz/{id}', [QuizController::class, 'getById']);
-
-Route::post('/quiz/{id}', [QuizController::class, 'update']);
-
-Route::post('/quiz/status/{id}', [QuizController::class, 'updateActiveStatus']);
+require_once base_path('routes/endpoints/role.php');
+require_once base_path('routes/endpoints/subject.php');
+require_once base_path('routes/endpoints/staff.php');
+require_once base_path('routes/endpoints/quiz.php');
+require_once base_path('routes/endpoints/school.php');
+require_once base_path('routes/endpoints/student.php');
+require_once base_path('routes/endpoints/classes.php');
+require_once base_path('routes/endpoints/question.php');
+require_once base_path('routes/endpoints/answer.php');
 
 Route::get('/', function () {
     return 'Quiz api';

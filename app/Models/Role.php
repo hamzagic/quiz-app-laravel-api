@@ -16,15 +16,15 @@ class Role extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'active'
+        'role_title',
+        'role_active'
     ];
 
     public function create($name)
     {
         try {
             $role = DB::table('role')->insertGetId([
-                'name' => $name,
+                'role_title' => $name,
             ]);
             $result = $this->getById($role);
             return $result;
@@ -65,7 +65,7 @@ class Role extends Model
             DB::table('role')
             ->where('id', '=', $id)
             ->update([
-                'name' => $name,
+                'role_title' => $name,
             ]);
             $role = $this->getById($id);
             return $role;
