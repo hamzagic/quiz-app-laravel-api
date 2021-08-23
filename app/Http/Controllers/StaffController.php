@@ -89,7 +89,7 @@ class StaffController extends Controller
         }
 
         $staff = new Staff();
-        $result = $staff->getById($id);
+        $result = $staff->getByIdFull($id);
 
         if (!$result) {
             return response()->json([

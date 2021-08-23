@@ -15,7 +15,7 @@ class CreateStudentTable extends Migration
     {
         Schema::create('role', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255)->unique();
+            $table->string('title', 255)->unique();
             $table->boolean('active')->default(true);
         });
         Schema::create('subject', function (Blueprint $table) {

@@ -69,16 +69,37 @@ class Staff extends Model
 
     public function list()
     {
-        $staff = DB::table('staff')->get();
+        $staff = DB::table('staff')
+        ->join('subject', 'subject.id', '=', 'staff.subject_id')
+        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->select('*')
+        ->get();
+
+        $response = $this->formatResponse($staff[0]);
+
+        return $response;
+    }
+
+    public function getById($id) {
+        $staff = DB::table('staff')
+        ->where('staff.id', '=', $id)
+        ->first();
+
         return $staff;
     }
 
-    public function getById($id)
+    public function getByIdFull($id)
     {
         $staff = DB::table('staff')
-        ->where('id', '=', $id)
-        ->first();
-        return $staff;
+        ->join('subject', 'subject.id', '=', 'staff.subject_id')
+        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->select('*')
+        ->where('staff.id', '=', $id)
+        ->get();
+
+        $response = $this->formatResponse($staff[0]);
+
+        return $response;
     }
 
     public function getByIdCount($id)
@@ -127,5 +148,28 @@ class Staff extends Model
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function formatResponse($table)
+    {
+        $response = array(
+            'id' => $table->id,
+            'first_name' => $table->first_name,
+            'last_name' => $table->last_name,
+            'email' => $table->email,
+            'role' => [
+                'role_id' => $table->role_id,
+                'role_title' => $table->title
+            ],
+            'subject' => [
+                'subject_id' => $table->subject_id,
+                'subject_name' => $table->name,
+            ],
+            'active' => $table->active,
+            'created_at' => $table->created_at,
+            'updated_at' => $table->updated_at,
+        );
+
+        return $response;
     }
 }
