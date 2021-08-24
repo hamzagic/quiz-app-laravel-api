@@ -24,6 +24,7 @@ require_once base_path('routes/endpoints/classes.php');
 require_once base_path('routes/endpoints/question.php');
 require_once base_path('routes/endpoints/answer.php');
 require_once base_path('routes/endpoints/quiz_question.php');
+require_once base_path('routes/endpoints/question_answer.php');
 
 Route::get('/', function () {
     return 'Quiz api';

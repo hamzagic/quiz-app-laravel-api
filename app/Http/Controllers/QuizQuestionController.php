@@ -83,12 +83,19 @@ class QuizQuestionController extends Controller
             'question_id' => $question_id
         );
 
-        $result = $quizQuestion->removeQuestionFromQuiz($data);
+        try {
+            $quizQuestion->removeQuestionFromQuiz($data);
 
-        return response()->json([
-            "data" => 'question removed successfully',
-            "error" => []
-        ]);
+            return response()->json([
+                "data" => 'question removed successfully',
+                "error" => []
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "data" => [],
+                "error" => $e->getMessage()
+            ]);
+        }
     }
 
     public function listAll()

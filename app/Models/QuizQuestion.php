@@ -6,7 +6,6 @@ use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use stdClass;
 
 class QuizQuestion extends Model
 {
@@ -36,11 +35,16 @@ class QuizQuestion extends Model
         }
     }
 
+    // todo - check if pair exists before attempting to delete
     public function removeQuestionFromQuiz($data)
     {
         $quizExists = $this->checkIfQuizExists($data['quiz_id']);
 
         if ($quizExists == 0) throw new Exception('Quiz not found');
+
+        $pairExists = $this->checkIfPairExists($data['quiz_id'], $data['question_id']);
+
+        if ($pairExists == 0) throw new Exception('Pair not found');
 
         try {
             DB::table('quiz_question')
@@ -94,7 +98,6 @@ class QuizQuestion extends Model
         return $result;
     }
 
-    // todo - format response
     public function list()
     {
         $list = DB::table('quiz_question')
