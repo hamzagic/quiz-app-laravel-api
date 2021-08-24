@@ -24,4 +24,9 @@ class QuestionAnswer extends Model
     {
 
     }
+
+    public function listAnswersFromQuestion($question_id)
+    {
+
+    }
 }

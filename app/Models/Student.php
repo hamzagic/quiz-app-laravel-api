@@ -12,6 +12,8 @@ class Student extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'student_id';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -70,20 +72,23 @@ class Student extends Model
     public function list()
     {
         $student = DB::table('student')
-        ->join('school', 'school.id', '=', 'student.school_id')
-        ->join('staff', 'staff.id', '=', 'school.staff_id')
-        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->join('school', 'school.school_id', '=', 'student.school_id')
+        ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
+        ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
         ->get();
 
-        $response = $this->formatResponse($student[0]);
+        $result = array();
+        foreach($student as $item) {
+            array_push($result, $this->formatResponse($item));
+        }
 
-        return $response;
+        return $result;
     }
 
     public function getById($id) {
         $student = DB::table('student')
-        ->where('student.id', '=', $id)
+        ->where('student_id', '=', $id)
         ->first();
 
         return $student;
@@ -92,11 +97,11 @@ class Student extends Model
     public function getByIdFull($id)
     {
         $student = DB::table('student')
-        ->join('school', 'school.id', '=', 'student.school_id')
-        ->join('staff', 'staff.id', '=', 'school.staff_id')
-        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->join('school', 'school.school_id', '=', 'student.school_id')
+        ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
+        ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
-        ->where('student.id', '=', $id)
+        ->where('student.student_id', '=', $id)
         ->get();
 
         $response = $this->formatResponse($student[0]);
@@ -107,7 +112,7 @@ class Student extends Model
     public function getByIdCount($id)
     {
         $student = DB::table('student')
-        ->where('id', '=', $id)
+        ->where('student_id', '=', $id)
         ->count();
 
         return $student;
@@ -120,7 +125,7 @@ class Student extends Model
 
         try {
             DB::table('student')
-            ->where('id', '=', $id)
+            ->where('student_id', '=', $id)
             ->update([
                 'student_first_name' => $data['first_name'],
                 'student_last_name' => $data['last_name'],
@@ -144,7 +149,7 @@ class Student extends Model
 
         try {
             DB::table('student')
-            ->where('id', '=', $id)
+            ->where('student_id', '=', $id)
             ->update([
                 'student_active' => !$active->student_active
             ]);
@@ -158,7 +163,7 @@ class Student extends Model
     public function formatResponse($table)
     {
         $response = array(
-            'id' => $table->id,
+            'id' => $table->student_id,
             'first_name' => $table->student_first_name,
             'last_name' => $table->student_last_name,
             'email' => $table->student_email,

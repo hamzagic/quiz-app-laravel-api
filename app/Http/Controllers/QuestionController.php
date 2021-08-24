@@ -13,7 +13,7 @@ class QuestionController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3|max:255|String',
             'alternatives_length' => 'required|integer',
-            'correct_answer_id' => 'required|integer|exists:answer,id',
+            'correct_answer_id' => 'required|integer|exists:answer,answer_id',
         ]);
 
         if ($validator->fails()) {
@@ -101,7 +101,7 @@ class QuestionController extends Controller
             'id' => 'integer',
             'title' => 'required|min:3|max:255|String',
             'alternatives_length' => 'required|integer',
-            'correct_answer_id' => 'required|integer|exists:answer,id',
+            'correct_answer_id' => 'required|integer|exists:answer,answer_id',
         ]);
 
         if ($validator->fails()) {

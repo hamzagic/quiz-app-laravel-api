@@ -14,25 +14,24 @@ class CreateClassQuestionAnswerTables extends Migration
     public function up()
     {
         Schema::create('class', function (Blueprint $table) {
-            $table->id();
+            $table->id('class_id');
             $table->string('class_name', 255);
             $table->integer('school_id')->refereces('id')->on('school');
             $table->integer('staff_id')->references('id')->on('staff');
             $table->timestamps();
         });
         Schema::create('answer', function (Blueprint $table) {
-            $table->id();
+            $table->id('answer_id');
             $table->string('answer_content');
             $table->boolean('answer_active')->default(true);
             $table->timestamps();
         });
         Schema::create('question', function (Blueprint $table) {
-            $table->id();
+            $table->id('question_id');
             $table->string('question_title', 255);
             $table->integer('question_alternatives_length');
-            $table->string('question_answers_ids');
-            $table->string('answer_correct_answer_id')->references('id')->on('answer');
-            $table->boolean('answer_active')->default(true);
+            $table->string('question_correct_answer_id')->references('id')->on('answer');
+            $table->boolean('question_active')->default(true);
             $table->timestamps();
         });
     }

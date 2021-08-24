@@ -10,6 +10,8 @@ class Role extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'role_id';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -42,7 +44,7 @@ class Role extends Model
     public function getById($id)
     {
         $role = DB::table('role')
-        ->where('id', '=', $id)
+        ->where('role_id', '=', $id)
         ->first();
         return $role;
     }
@@ -50,7 +52,7 @@ class Role extends Model
     public function getByIdCount($id)
     {
         $role = DB::table('role')
-        ->where('id', '=', $id)
+        ->where('role_id', '=', $id)
         ->count();
 
         return $role;
@@ -63,7 +65,7 @@ class Role extends Model
 
         try {
             DB::table('role')
-            ->where('id', '=', $id)
+            ->where('role_id', '=', $id)
             ->update([
                 'role_title' => $name,
             ]);

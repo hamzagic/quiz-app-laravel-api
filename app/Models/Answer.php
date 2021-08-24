@@ -11,7 +11,7 @@ class Answer extends Model
 {
     use HasFactory;
 
-    protected $table = 'class';
+    protected $primaryKey = 'answer_id';
     /**
      * The attributes that are mass assignable.
      *
@@ -45,7 +45,7 @@ class Answer extends Model
     public function getById($id)
     {
         $answer = DB::table('answer')
-        ->where('id', '=', $id)
+        ->where('answer_id', '=', $id)
         ->first();
         return $answer;
     }
@@ -53,7 +53,7 @@ class Answer extends Model
     public function getByIdCount($id)
     {
         $answer = DB::table('answer')
-        ->where('id', '=', $id)
+        ->where('answer_id', '=', $id)
         ->count();
 
         return $answer;
@@ -66,7 +66,7 @@ class Answer extends Model
 
         try {
             DB::table('answer')
-            ->where('id', '=', $id)
+            ->where('answer_id', '=', $id)
             ->update([
                 'answer_content' => $data['content'],
                 'updated_at' => Carbon::now()
@@ -87,7 +87,7 @@ class Answer extends Model
 
         try {
             DB::table('answer')
-            ->where('id', '=', $id)
+            ->where('answer_id', '=', $id)
             ->update([
                 'answer_active' => !$active->answer_active
             ]);

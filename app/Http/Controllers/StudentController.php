@@ -15,7 +15,7 @@ class StudentController extends Controller
             'last_name' => 'required|min:3|max:255|String',
             'email' => 'required|email',
             'password' => 'required|min:5|string',
-            'school_id' => 'required|integer|exists:school,id',
+            'school_id' => 'required|integer|exists:school,school_id',
         ]);
 
         if ($validator->fails()) {
@@ -108,7 +108,7 @@ class StudentController extends Controller
             'first_name' => 'required|min:3|max:255|String',
             'last_name' => 'required|min:3|max:255|String',
             'email' => 'required|email',
-            'school_id' => 'required|integer|exists:school,id'
+            'school_id' => 'required|integer|exists:school,school_id'
         ]);
 
         if ($validator->fails()) {

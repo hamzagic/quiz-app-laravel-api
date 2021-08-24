@@ -12,6 +12,8 @@ class Subject extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'subject_id';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -45,7 +47,7 @@ class Subject extends Model
     public function getById($id)
     {
         $subject = DB::table('subject')
-        ->where('id', '=', $id)
+        ->where('subject_id', '=', $id)
         ->first();
         return $subject;
     }
@@ -53,7 +55,7 @@ class Subject extends Model
     public function getByIdCount($id)
     {
         $subject = DB::table('subject')
-        ->where('id', '=', $id)
+        ->where('subject_id', '=', $id)
         ->count();
 
         return $subject;
@@ -66,7 +68,7 @@ class Subject extends Model
 
         try {
             DB::table('subject')
-            ->where('id', '=', $id)
+            ->where('subject_id', '=', $id)
             ->update([
                 'subject_name' => $name,
                 'updated_at' => Carbon::now()

@@ -13,7 +13,7 @@ class SchoolController extends Controller
         $validator = Validator::make($request->all(), [
             'school_name' => 'required|min:3|max:255|String',
             'address' => 'required|min:3|max:255|String',
-            'staff_id' => 'required|integer|exists:staff,id',
+            'staff_id' => 'required|integer|exists:staff,staff_id',
         ]);
 
         if ($validator->fails()) {
@@ -101,7 +101,7 @@ class SchoolController extends Controller
             'id' => 'integer',
             'school_name' => 'required|min:3|max:255|String',
             'address' => 'required|min:3|max:255|String',
-            'staff_id' => 'required|integer|exists:staff,id',
+            'staff_id' => 'required|integer|exists:staff,staff_id',
         ]);
 
         if ($validator->fails()) {

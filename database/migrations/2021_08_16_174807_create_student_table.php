@@ -14,18 +14,18 @@ class CreateStudentTable extends Migration
     public function up()
     {
         Schema::create('role', function (Blueprint $table) {
-            $table->id();
+            $table->id('role_id');
             $table->string('role_title', 255)->unique();
             $table->boolean('role_active')->default(true);
         });
         Schema::create('subject', function (Blueprint $table) {
-            $table->id();
+            $table->id('subject_id');
             $table->string('subject_name', 255)->unique();
             $table->boolean('subject_active')->default(true);
             $table->timestamps();
         });
         Schema::create('staff', function (Blueprint $table) {
-            $table->id();
+            $table->id('staff_id');
             $table->string('staff_first_name', 255);
             $table->string('staff_last_name', 255);
             $table->string('staff_email')->unique();
@@ -36,7 +36,7 @@ class CreateStudentTable extends Migration
             $table->timestamps();
         });
         Schema::create('school', function (Blueprint $table) {
-            $table->id();
+            $table->id('school_id');
             $table->string('school_name', 255);
             $table->string('school_address');
             $table->boolean('school_active')->default(true);
@@ -44,7 +44,7 @@ class CreateStudentTable extends Migration
             $table->timestamps();
         });
         Schema::create('student', function (Blueprint $table) {
-            $table->id();
+            $table->id('student_id');
             $table->string('student_first_name', 255);
             $table->string('student_last_name', 255);
             $table->string('student_email')->unique();

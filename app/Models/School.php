@@ -12,6 +12,8 @@ class School extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'school_id';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -55,19 +57,22 @@ class School extends Model
     public function list()
     {
         $school = DB::table('school')
-        ->join('staff', 'staff.id', '=', 'school.staff_id')
-        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
+        ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
         ->get();
 
-        $response = $this->formatResponse($school[0]);
+        $result = array();
+        foreach($school as $item) {
+            array_push($result, $this->formatResponse($item));
+        }
 
-        return $response;
+        return $result;
     }
 
     public function getById($id) {
         $school = DB::table('school')
-        ->where('school.id', '=', $id)
+        ->where('school.school_id', '=', $id)
         ->first();
 
         return $school;
@@ -76,10 +81,10 @@ class School extends Model
     public function getByIdFull($id)
     {
         $school = DB::table('school')
-        ->join('staff', 'staff.id', '=', 'school.staff_id')
-        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
+        ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
-        ->where('school.id', '=', $id)
+        ->where('school.school_id', '=', $id)
         ->get();
 
         $response = $this->formatResponse($school[0]);
@@ -90,7 +95,7 @@ class School extends Model
     public function getByIdCount($id)
     {
         $school = DB::table('school')
-        ->where('id', '=', $id)
+        ->where('school_id', '=', $id)
         ->count();
 
         return $school;
@@ -103,7 +108,7 @@ class School extends Model
 
         try {
             DB::table('school')
-            ->where('id', '=', $id)
+            ->where('school_id', '=', $id)
             ->update([
                 'school_name' => $data['school_name'],
                 'school_address' => $data['address'],
@@ -126,7 +131,7 @@ class School extends Model
 
         try {
             DB::table('school')
-            ->where('id', '=', $id)
+            ->where('school_id', '=', $id)
             ->update([
                 'school_active' => !$active->school_active
             ]);
@@ -140,11 +145,11 @@ class School extends Model
     public function formatResponse($table)
     {
         $response = array(
-            'id' => $table->id,
+            'id' => $table->school_id,
             'name' => $table->school_name,
             'address' => $table->school_address,
             'staff' => [
-                'staff_id' => $table->role_id,
+                'staff_id' => $table->staff_id,
                 'staff_first_name' => $table->staff_first_name,
                 'staff_last_name' => $table->staff_last_name,
                 'staff_email' => $table->staff_email,

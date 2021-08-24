@@ -15,8 +15,8 @@ class StaffController extends Controller
             'last_name' => 'required|min:3|max:255|String',
             'email' => 'required|email',
             'password' => 'required|min:5|string',
-            'role_id' => 'required|integer|exists:role,id',
-            'subject_id' => 'required|integer|exists:subject,id'
+            'role_id' => 'required|integer|exists:role,role_id',
+            'subject_id' => 'required|integer|exists:subject,subject_id'
         ]);
 
         if ($validator->fails()) {
@@ -111,8 +111,8 @@ class StaffController extends Controller
             'first_name' => 'required|min:3|max:255|String',
             'last_name' => 'required|min:3|max:255|String',
             'email' => 'required|email',
-            'role_id' => 'required|integer',
-            'subject_id' => 'required|integer'
+            'role_id' => 'required|integer|exists:role,role_id',
+            'subject_id' => 'required|integer|exists:subject,subject_id'
         ]);
 
         if ($validator->fails()) {

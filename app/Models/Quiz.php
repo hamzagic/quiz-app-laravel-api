@@ -12,6 +12,8 @@ class Quiz extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'quiz_id';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -47,13 +49,13 @@ class Quiz extends Model
 
     public function getById($id)
     {
-        $quiz = DB::table('quiz')->where('id', $id)->first();
+        $quiz = DB::table('quiz')->where('quiz_id', $id)->first();
         return $quiz;
     }
 
     public function getByIdCount($id)
     {
-        $quiz = DB::table('quiz')->where('id', $id)->count();
+        $quiz = DB::table('quiz')->where('quiz_id', $id)->count();
         return $quiz;
     }
 
@@ -69,7 +71,7 @@ class Quiz extends Model
         if ($result) {
             try {
                 DB::table('quiz')
-                ->where('id', '=', $data['id'])
+                ->where('quiz_id', '=', $data['id'])
                 ->update([
                     'quiz_name' => $data['name'],
                     'back_button' => $data['back_button'],
@@ -98,7 +100,7 @@ class Quiz extends Model
 
         try {
             DB::table('quiz')
-            ->where('id', '=', $id)
+            ->where('quiz_id', '=', $id)
             ->update([
                 'active' => !$active->active
             ]);

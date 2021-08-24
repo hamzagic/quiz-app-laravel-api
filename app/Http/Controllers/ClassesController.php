@@ -12,8 +12,8 @@ class ClassesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3|max:255|String',
-            'school_id' => 'required|integer|exists:school,id',
-            'staff_id' => 'required|integer|exists:staff,id'
+            'school_id' => 'required|integer|exists:school,school_id',
+            'staff_id' => 'required|integer|exists:staff,staff_id'
         ]);
 
         if ($validator->fails()) {
@@ -99,8 +99,8 @@ class ClassesController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'Integer',
             'name' => 'required|min:3|String',
-            'school_id' => 'required|integer|exists:school,id',
-            'staff_id' => 'required|integer|exists:staff,id'
+            'school_id' => 'required|integer|exists:school,school_id',
+            'staff_id' => 'required|integer|exists:staff,staff_id'
         ]);
 
         if ($validator->fails()) {

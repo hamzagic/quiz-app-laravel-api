@@ -12,6 +12,8 @@ class Question extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'question_id';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -19,10 +21,9 @@ class Question extends Model
      */
     protected $fillable = [
         'question_title',
-        'quesiton_alternatives_length',
-        'question_answer_ids',
-        'answer_correct_answer_id',
-        'answer_active'
+        'question_alternatives_length',
+        'question_correct_answer_id',
+        'question_active'
     ];
 
     public function create($data)
@@ -31,7 +32,7 @@ class Question extends Model
             $question = DB::table('question')->insertGetId([
                 'question_title' => $data['title'],
                 'question_alternatives_length' => $data['alternatives_length'],
-                'answer_correct_answer_id' => $data['correct_answer_id'],
+                'question_correct_answer_id' => $data['correct_answer_id'],
                 'created_at' => Carbon::now()
             ]);
             $result = $this->getById($question);
@@ -44,18 +45,21 @@ class Question extends Model
     public function list()
     {
         $question = DB::table('question')
-        ->join('answer', 'answer.id', '=', 'question.answer_correct_answer_id')
+        ->join('answer', 'answer.answer_id', '=', 'question.question_correct_answer_id')
         ->select('*')
         ->get();
 
-        $response = $this->formatResponse($question[0]);
+        $result = array();
+        foreach($question as $item) {
+            array_push($result, $this->formatResponse($item));
+        }
 
-        return $response;
+        return $result;
     }
 
     public function getById($id) {
         $question = DB::table('question')
-        ->where('question.id', '=', $id)
+        ->where('question_id', '=', $id)
         ->first();
 
         return $question;
@@ -64,9 +68,9 @@ class Question extends Model
     public function getByIdFull($id)
     {
         $question = DB::table('question')
-        ->join('answer', 'answer.id', '=', 'question.answer_correct_answer_id')
+        ->join('answer', 'answer.answer_id', '=', 'question.question_correct_answer_id')
         ->select('*')
-        ->where('question.id', '=', $id)
+        ->where('question.question_id', '=', $id)
         ->get();
 
         $response = $this->formatResponse($question[0]);
@@ -77,7 +81,7 @@ class Question extends Model
     public function getByIdCount($id)
     {
         $question = DB::table('question')
-        ->where('id', '=', $id)
+        ->where('question_id', '=', $id)
         ->count();
 
         return $question;
@@ -90,11 +94,11 @@ class Question extends Model
 
         try {
             DB::table('question')
-            ->where('id', '=', $id)
+            ->where('question_id', '=', $id)
             ->update([
                 'question_title' => $data['title'],
                 'question_alternatives_length' => $data['alternatives_length'],
-                'answer_correct_answer_id' => $data['correct_answer_id'],
+                'question_correct_answer_id' => $data['correct_answer_id'],
                 'updated_at' => Carbon::now()
             ]);
             $question = $this->getById($id);
@@ -113,7 +117,7 @@ class Question extends Model
 
         try {
             DB::table('question')
-            ->where('id', '=', $id)
+            ->where('question_id', '=', $id)
             ->update([
                 'question_active' => !$active->question_active
             ]);
@@ -127,11 +131,11 @@ class Question extends Model
     public function formatResponse($table)
     {
         $response = array(
-            'id' => $table->id,
+            'id' => $table->question_id,
             'question_title' => $table->question_title,
             'alternatives_length' => $table->question_alternatives_length,
             'correct_answer' => [
-                'answer_id' => $table->answer_correct_answer_id,
+                'answer_id' => $table->question_correct_answer_id,
                 'answer_content' => $table->answer_content,
                 'answer_active' => $table->answer_active
             ],

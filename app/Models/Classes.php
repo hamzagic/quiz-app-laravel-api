@@ -56,21 +56,24 @@ class Classes extends Model
     public function list()
     {
         $classes = DB::table('class')
-        ->join('school', 'school.id', '=', 'class.school_id')
-        ->join('staff', 'staff.id', '=', 'class.staff_id')
-        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->join('school', 'school.school_id', '=', 'class.school_id')
+        ->join('staff', 'staff.staff_id', '=', 'class.staff_id')
+        ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
         ->get();
 
-        $response = $this->formatResponse($classes[0]);
+        $result = array();
+        foreach($classes as $item) {
+            array_push($result, $this->formatResponse($item));
+        }
 
-        return $response;
+        return $result;
     }
 
     public function getById($id)
     {
         $class = DB::table('class')
-        ->where('id', '=', $id)
+        ->where('class_id', '=', $id)
         ->first();
         return $class;
     }
@@ -78,11 +81,11 @@ class Classes extends Model
     public function getByIdFull($id)
     {
         $class = DB::table('class')
-        ->join('school', 'school.id', '=', 'class.school_id')
-        ->join('staff', 'staff.id', '=', 'class.staff_id')
-        ->join('role', 'role.id', '=', 'staff.role_id')
+        ->join('school', 'school.school_id', '=', 'class.school_id')
+        ->join('staff', 'staff.staff_id', '=', 'class.staff_id')
+        ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
-        ->where('class.id', '=', $id)
+        ->where('class.class_id', '=', $id)
         ->get();
 
         $response = $this->formatResponse($class[0]);
@@ -93,7 +96,7 @@ class Classes extends Model
     public function getByIdCount($id)
     {
         $class = DB::table('class')
-        ->where('id', '=', $id)
+        ->where('class_id', '=', $id)
         ->count();
 
         return $class;
@@ -106,7 +109,7 @@ class Classes extends Model
 
         try {
             DB::table('class')
-            ->where('id', '=', $id)
+            ->where('class_id', '=', $id)
             ->update([
                 'class_name' => $data['name'],
                 'school_id' => $data['school_id'],
@@ -123,7 +126,7 @@ class Classes extends Model
     public function formatResponse($table)
     {
         $response = array(
-            'id' => $table->id,
+            'id' => $table->class_id,
             'class_name' => $table->class_name,
             'school' => [
                 'school_id' => $table->school_id,

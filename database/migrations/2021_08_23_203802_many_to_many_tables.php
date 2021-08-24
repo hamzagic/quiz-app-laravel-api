@@ -14,13 +14,13 @@ class ManyToManyTables extends Migration
     public function up()
     {
         Schema::create('quiz_question', function (Blueprint $table) {
-            $table->primary(['quiz, question']);
+            $table->id();
             $table->integer('quiz_id');
             $table->integer('question_id');
         });
 
         Schema::create('question_answer', function (Blueprint $table) {
-            $table->primary(['question, answer']);
+            $table->id();
             $table->integer('question_id');
             $table->integer('answer_id');
         });
