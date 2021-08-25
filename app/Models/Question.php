@@ -21,8 +21,8 @@ class Question extends Model
      */
     protected $fillable = [
         'question_title',
-        'question_alternatives_length',
-        'question_correct_answer_id',
+        'alternatives_length',
+        'correct_answer_id',
         'question_active'
     ];
 
@@ -31,13 +31,13 @@ class Question extends Model
         try {
             $question = DB::table('question')->insertGetId([
                 'question_title' => $data['title'],
-                'question_alternatives_length' => $data['alternatives_length'],
-                'question_correct_answer_id' => $data['correct_answer_id'],
+                'alternatives_length' => $data['alternatives_length'],
+                'correct_answer_id' => $data['correct_answer_id'],
                 'created_at' => Carbon::now()
             ]);
             $result = $this->getById($question);
             return $result;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
            return false;
         }
     }
@@ -45,7 +45,7 @@ class Question extends Model
     public function list()
     {
         $question = DB::table('question')
-        ->join('answer', 'answer.answer_id', '=', 'question.question_correct_answer_id')
+        ->join('answer', 'answer.answer_id', '=', 'question.correct_answer_id')
         ->select('*')
         ->get();
 
@@ -68,7 +68,7 @@ class Question extends Model
     public function getByIdFull($id)
     {
         $question = DB::table('question')
-        ->join('answer', 'answer.answer_id', '=', 'question.question_correct_answer_id')
+        ->join('answer', 'answer.answer_id', '=', 'question.correct_answer_id')
         ->select('*')
         ->where('question.question_id', '=', $id)
         ->get();
@@ -97,13 +97,13 @@ class Question extends Model
             ->where('question_id', '=', $id)
             ->update([
                 'question_title' => $data['title'],
-                'question_alternatives_length' => $data['alternatives_length'],
-                'question_correct_answer_id' => $data['correct_answer_id'],
+                'alternatives_length' => $data['alternatives_length'],
+                'correct_answer_id' => $data['correct_answer_id'],
                 'updated_at' => Carbon::now()
             ]);
             $question = $this->getById($id);
             return $question;
-        } catch(\Exception $e) {
+        } catch(Exception $e) {
            return $e->getMessage();
         }
     }
@@ -123,7 +123,7 @@ class Question extends Model
             ]);
             return true;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage();
         }
     }
@@ -133,9 +133,9 @@ class Question extends Model
         $response = array(
             'id' => $table->question_id,
             'question_title' => $table->question_title,
-            'alternatives_length' => $table->question_alternatives_length,
+            'alternatives_length' => $table->alternatives_length,
             'correct_answer' => [
-                'answer_id' => $table->question_correct_answer_id,
+                'answer_id' => $table->correct_answer_id,
                 'answer_content' => $table->answer_content,
                 'answer_active' => $table->answer_active
             ],

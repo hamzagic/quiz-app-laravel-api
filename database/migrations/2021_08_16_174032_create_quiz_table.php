@@ -19,6 +19,8 @@ class CreateQuizTable extends Migration
             $table->boolean('back_button')->default(true);
             $table->integer('questions_per_page');
             $table->date('start_date');
+            $table->date('end_date');
+            $table->integer('total_questions');
             $table->boolean('active')->default(true);
             $table->timestamps();
         });

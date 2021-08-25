@@ -10,8 +10,6 @@ class QuizController extends Controller
 {
     public function __construct(){}
 
-    // todo: create a format response class
-
     public function list()
     {
         $quiz = new Quiz();
@@ -28,6 +26,7 @@ class QuizController extends Controller
             'name' => 'required|min:3|max:255|String',
             'back_button' => 'required|Boolean',
             'questions_per_page' => 'required|Integer',
+            'total_questions' => 'required|integer|min:1',
             'start_date' => 'required',
             'end_date' => 'required'
         ]);
@@ -44,9 +43,19 @@ class QuizController extends Controller
         $questions_per_page = $request->input('questions_per_page');
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
+        $total_questions = $request->input('total_questions');
+
+        $data = array(
+            'name' => $name,
+            'back_button' => $back_button,
+            'questions_per_page' => $questions_per_page,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'total_questions' => $total_questions
+        );
 
         $quiz = new Quiz();
-        $result = $quiz->create($name, $back_button, $questions_per_page, $start_date, $end_date);
+        $result = $quiz->create($data);
         if (!$result) return response()->json([
             "data" => [],
             "error" => "Could not create quiz"
@@ -87,6 +96,7 @@ class QuizController extends Controller
             'name' => 'required|min:3|max:255|String',
             'back_button' => 'required|Boolean',
             'questions_per_page' => 'required|Integer',
+            'total_questions' => 'required|integer|min:1',
             'start_date' => 'required',
             'end_date' => 'required'
         ]);
@@ -103,6 +113,7 @@ class QuizController extends Controller
         $questions_per_page = $request->input('questions_per_page');
         $start_date = $request->input('start_date');
         $end_date = $request->input('end_date');
+        $total_questions = $request->input('total_questions');
 
         $quiz = new Quiz();
 
@@ -110,6 +121,7 @@ class QuizController extends Controller
             'name' => $name,
             'back_button' => $back_button,
             'questions_per_page' => $questions_per_page,
+            'total_questions' => $total_questions,
             'start_date' => $start_date,
             'end_date' => $end_date,
             'id' => $id

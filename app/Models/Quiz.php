@@ -24,19 +24,23 @@ class Quiz extends Model
         'back_button',
         'questions_per_page',
         'start_date',
+        'end_date',
+        'total_questions',
         'active',
-        'created_at'
+        'created_at',
+        'updated_at'
     ];
 
-    public function create($name, $back_button, $questions_per_page, $start_date, $end_date)
+    public function create($data)
     {
         try {
             $quiz = DB::table('quiz')->insertGetId([
-                'quiz_name' => $name,
-                'back_button' => $back_button,
-                'questions_per_page' => $questions_per_page,
-                'start_date' => $start_date,
-                'end_date' => $end_date,
+                'quiz_name' => $data['name'],
+                'back_button' => $data['back_button'],
+                'questions_per_page' => $data['questions_per_page'],
+                'start_date' => $data['start_date'],
+                'end_date' => $data['end_date'],
+                'total_questions' => $data['total_questions'],
                 'created_at' => Carbon::now()
             ]);
             $result = $this->getById($quiz);
@@ -78,6 +82,7 @@ class Quiz extends Model
                     'questions_per_page' => $data['questions_per_page'],
                     'start_date' => $data['start_date'],
                     'end_date' => $data['end_date'],
+                    'total_questions' => $data['total_questions'],
                     'updated_at' => Carbon::now(),
                     'created_at' => $result->created_at
                 ]);

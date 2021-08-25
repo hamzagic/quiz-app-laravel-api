@@ -16,8 +16,8 @@ class CreateClassQuestionAnswerTables extends Migration
         Schema::create('class', function (Blueprint $table) {
             $table->id('class_id');
             $table->string('class_name', 255);
-            $table->integer('school_id')->refereces('id')->on('school');
-            $table->integer('staff_id')->references('id')->on('staff');
+            $table->integer('school_id')->refereces('school_id')->on('school');
+            $table->integer('staff_id')->references('staff_id')->on('staff');
             $table->timestamps();
         });
         Schema::create('answer', function (Blueprint $table) {
@@ -29,8 +29,8 @@ class CreateClassQuestionAnswerTables extends Migration
         Schema::create('question', function (Blueprint $table) {
             $table->id('question_id');
             $table->string('question_title', 255);
-            $table->integer('question_alternatives_length');
-            $table->string('question_correct_answer_id')->references('id')->on('answer');
+            $table->integer('alternatives_length');
+            $table->string('correct_answer_id')->references('answer_id')->on('answer');
             $table->boolean('question_active')->default(true);
             $table->timestamps();
         });

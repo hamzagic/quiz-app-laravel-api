@@ -31,8 +31,8 @@ class CreateStudentTable extends Migration
             $table->string('staff_email')->unique();
             $table->string('password');
             $table->boolean('staff_active')->default(true);
-            $table->integer('role_id')->references('id')->on('role');
-            $table->integer('subject_id')->references('id')->on('subject')->nullable();
+            $table->integer('role_id')->references('role_id')->on('role');
+            $table->integer('subject_id')->references('subject_id')->on('subject')->nullable();
             $table->timestamps();
         });
         Schema::create('school', function (Blueprint $table) {
@@ -40,7 +40,7 @@ class CreateStudentTable extends Migration
             $table->string('school_name', 255);
             $table->string('school_address');
             $table->boolean('school_active')->default(true);
-            $table->integer('staff_id')->references('id')->on('staff');
+            $table->integer('staff_id')->references('staff_id')->on('staff');
             $table->timestamps();
         });
         Schema::create('student', function (Blueprint $table) {
@@ -50,7 +50,7 @@ class CreateStudentTable extends Migration
             $table->string('student_email')->unique();
             $table->string('password');
             $table->boolean('student_active')->default(true);
-            $table->integer('school_id')->references('id')->on('school');
+            $table->integer('school_id')->references('school_id')->on('school');
             $table->timestamps();
         });
     }
