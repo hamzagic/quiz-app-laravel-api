@@ -13,21 +13,34 @@ class QuestionAnswer extends Model
 
     protected $fillable = [
         'question_id',
-        'answer_id'
+        'answer_id',
+        'quiz_id',
+        'is_answer_correct'
     ];
 
     public function addAnswerToQuestion($data)
     {
+        $quiz_id = $data['quiz_id'];
         $question_id = $data['question_id'];
         $answer_id = $data['answer_id'];
+        $is_answer_correct = $data['is_answer_correct'];
 
-        $pairExists = $this->checkIfPairExists($question_id, $answer_id);
-        if ($pairExists > 0) throw new Exception('Answer is already included on question');
+        $quizQuestionExists = $this->checkIfQuizQuestionExists($data['quiz_id'], $data['question_id']);
+
+        // we will not add answer if the question is not already added to the quiz
+        if ($quizQuestionExists == 0) throw new Exception('Question is not included on quiz yet');
+
+        // we will not duplicate the same quiz/question/answer group
+        // todo check if there's already an answer set as correct
+        $groupExists = $this->checkIfGroupExists($quiz_id, $question_id, $answer_id);
+        if ($groupExists > 0) throw new Exception('Answer is already included on question/quiz');
 
         try {
             DB::table('question_answer')->insert([
+                'quiz_id' => $quiz_id,
                 'question_id' => $question_id,
                 'answer_id' => $answer_id,
+                'is_answer_correct' => $is_answer_correct
             ]);
             return true;
         } catch(\Exception $e) {
@@ -35,19 +48,19 @@ class QuestionAnswer extends Model
         }
     }
 
-    // todo - validate if pair exists before attempting to delete
     public function removeAnswerFromQuestion($data)
     {
         $questionExists = $this->checkIfQuestionExists($data['question_id']);
 
         if ($questionExists == 0) throw new Exception('Question not found');
 
-        $pairExists = $this->checkIfPairExists($data['question_id'], $data['answer_id']);
+        $groupExists = $this->checkIfGroupExists($data['quiz_id'], $data['question_id'], $data['answer_id']);
 
-        if ($pairExists == 0) throw new Exception('Pair not found');
+        if ($groupExists == 0) throw new Exception('Group not found');
 
         try {
             DB::table('question_answer')
+            ->where('quiz_id', '=', $data['quiz_id'])
             ->where('question_id', '=', $data['question_id'])
             ->where('answer_id', '=', $data['answer_id'])
             ->delete();
@@ -58,16 +71,18 @@ class QuestionAnswer extends Model
         }
     }
 
-    public function listAnswersFromQuestion($question_id)
+    public function listAnswersFromQuestion($quiz_id, $question_id)
     {
         $questionExists = $this->checkIfQuestionExists($question_id);
 
         if ($questionExists == 0) throw new Exception('Question not found');
 
         $list = DB::table('question_answer')
+        ->join('quiz', 'quiz.quiz_id', '=', 'question_answer.quiz_id')
         ->join('question', 'question.question_id', '=', 'question_answer.question_id')
         ->join('answer', 'answer.answer_id', '=', 'question_answer.answer_id')
         ->select('*')
+        ->where('quiz.quiz_id', '=', $quiz_id)
         ->where('question.question_id', '=', $question_id)
         ->get();
 
@@ -79,6 +94,25 @@ class QuestionAnswer extends Model
         return $result;
     }
 
+    public function toggleCorrectAnswer($data)
+    {
+        $quizQuestionExists = $this->checkIfQuizQuestionExists($data['quiz_id'], $data['question_id']);
+        if ($quizQuestionExists == 0) throw new Exception('Question is not included on quiz yet');
+
+        $groupExists = $this->checkIfGroupExists($data['quiz_id'], $data['question_id'], $data['answer_id']);
+        if ($groupExists == 0) throw new Exception('Could not find answer in the quiz/question');
+
+        $questionAnswer = $this->getByTableIds($data['quiz_id'], $data['question_id'], $data['answer_id']);
+
+        DB::table('question_answer')
+        ->where('quiz_id', '=', $data['quiz_id'])
+        ->where('question_id', '=', $data['question_id'])
+        ->where('answer_id', '=', $data['answer_id'])
+        ->update([
+            'is_answer_correct' => !$questionAnswer->is_answer_correct
+        ]);
+    }
+
     public function checkIfQuestionExists($id)
     {
         $question = DB::table('question')
@@ -88,9 +122,20 @@ class QuestionAnswer extends Model
         return $question;
     }
 
-    public function checkIfPairExists($question_id, $answer_id)
+    public function checkIfQuizQuestionExists($quiz_id, $question_id)
+    {
+        $result = DB::table('quiz_question')
+        ->where('quiz_id', '=', $quiz_id)
+        ->where('question_id', '=', $question_id)
+        ->count();
+
+        return $result;
+    }
+
+    public function checkIfGroupExists($quiz_id, $question_id, $answer_id)
     {
         $result = DB::table('question_answer')
+        ->where('quiz_id', '=', $quiz_id)
         ->where('question_id', '=', $question_id)
         ->where('answer_id', '=', $answer_id)
         ->count();
@@ -98,9 +143,21 @@ class QuestionAnswer extends Model
         return $result;
     }
 
+    public function getByTableIds($quiz_id, $question_id, $answer_id)
+    {
+        $result = DB::table('question_answer')
+        ->where('quiz_id', '=', $quiz_id)
+        ->where('question_id', '=', $question_id)
+        ->where('answer_id', '=', $answer_id)
+        ->first();
+
+        return $result;
+    }
+
     public function list()
     {
         $list = DB::table('question_answer')
+        ->join('quiz', 'quiz.quiz_id', '=', 'question_answer.quiz_id')
         ->join('question', 'question.question_id', '=', 'question_answer.question_id')
         ->join('answer', 'answer.answer_id', '=', 'question_answer.answer_id')
         ->select('*')
@@ -118,11 +175,20 @@ class QuestionAnswer extends Model
     {
         $response = array(
             'id' => $table->id,
+            'quiz' => [
+               'quiz_id' => $table->quiz_id,
+               'quiz_name' => $table->quiz_name,
+               'back_button' => $table->back_button,
+               'questions_per_page' => $table->questions_per_page,
+               'total_questions' => $table->total_questions,
+               'start_date'=> $table->start_date,
+               'end_date'=> $table->end_date,
+               'active' => $table->active
+            ],
             'question' => [
                 'question_id' => $table->question_id,
                 'question_title' => $table->question_title,
-                'question_alternatives_length' => $table->question_alternatives_length,
-                'question_correct_answer_id' => $table->question_correct_answer_id,
+                'question_alternatives_length' => $table->alternatives_length,
                 'question_active' => $table->question_active
             ],
             'answer' => [

@@ -15,14 +15,16 @@ class ManyToManyTables extends Migration
     {
         Schema::create('quiz_question', function (Blueprint $table) {
             $table->id();
-            $table->integer('quiz_id');
-            $table->integer('question_id');
+            $table->integer('quiz_id')->refereces('quiz_id')->on('quiz');
+            $table->integer('question_id')->refereces('question_id')->on('question');
         });
 
         Schema::create('question_answer', function (Blueprint $table) {
             $table->id();
-            $table->integer('question_id');
-            $table->integer('answer_id');
+            $table->integer('question_id')->refereces('question_id')->on('question');
+            $table->integer('answer_id')->refereces('answer_id')->on('answer');
+            $table->integer('quiz_id')->refereces('quiz_id')->on('quiz');
+            $table->boolean('is_answer_correct')->default(false);
         });
     }
 

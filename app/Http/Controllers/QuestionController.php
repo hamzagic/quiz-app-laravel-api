@@ -12,8 +12,7 @@ class QuestionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3|max:255|String',
-            'alternatives_length' => 'required|integer',
-            'correct_answer_id' => 'required|integer|exists:answer,answer_id',
+            'alternatives_length' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -25,12 +24,10 @@ class QuestionController extends Controller
 
         $title = $request->input('title');
         $alternatives_length = $request->input('alternatives_length');
-        $correct_answer_id = $request->input('correct_answer_id');
 
         $data = array(
             'title' => $title,
-            'alternatives_length' => $alternatives_length,
-            'correct_answer_id' => $correct_answer_id
+            'alternatives_length' => $alternatives_length
         );
 
         $question = new Question();
@@ -101,7 +98,6 @@ class QuestionController extends Controller
             'id' => 'integer',
             'title' => 'required|min:3|max:255|String',
             'alternatives_length' => 'required|integer',
-            'correct_answer_id' => 'required|integer|exists:answer,answer_id',
         ]);
 
         if ($validator->fails()) {
@@ -112,12 +108,10 @@ class QuestionController extends Controller
         }
         $title = $request->input('title');
         $alternatives_length = $request->input('alternatives_length');
-        $correct_answer_id = $request->input('correct_answer_id');
 
         $data = array(
             'title' => $title,
             'alternatives_length' => $alternatives_length,
-            'correct_answer_id' => $correct_answer_id
         );
 
         $question = new Question();

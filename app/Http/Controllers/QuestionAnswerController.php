@@ -11,8 +11,10 @@ class QuestionAnswerController extends Controller
     public function addAnswerToQuestion(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'question_id' => 'required|integer|exists:question,question_id',
+            'quiz_id' => 'required|integer|exists:quiz,quiz_id',
             'answer_id' => 'required|integer|exists:answer,answer_id',
+            'question_id' => 'required|integer|exists:question,question_id',
+            'is_answer_correct' => 'required|boolean',
         ]);
 
         if ($validator->fails()) {
@@ -22,12 +24,16 @@ class QuestionAnswerController extends Controller
             ], 400);
         }
 
+        $quiz_id = $request->input('quiz_id');
         $question_id = $request->input('question_id');
         $answer_id = $request->input('answer_id');
+        $is_answer_correct = $request->input('is_answer_correct');
 
         $data = array(
+            'quiz_id' => $quiz_id,
             'question_id' => $question_id,
-            'answer_id' => $answer_id
+            'answer_id' => $answer_id,
+            'is_answer_correct' => $is_answer_correct
         );
 
         $questionAnswer = new QuestionAnswer();
@@ -50,10 +56,24 @@ class QuestionAnswerController extends Controller
         }
     }
 
-    public function listAnswersFromQuestion($question_id)
+    public function listAnswersFromQuestion(Request $request, $id)
     {
+        $validator = Validator::make($request->all(), [
+            'id' => 'integer',
+            'quiz_id' => 'required|integer|exists:quiz,quiz_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "data" => [],
+                "error" => $validator->errors()->all()
+            ], 400);
+        }
+
+        $quiz_id = $request->input('quiz_id');
+
         $questionAnswer = new QuestionAnswer();
-        $result = $questionAnswer->listAnswersFromQuestion($question_id);
+        $result = $questionAnswer->listAnswersFromQuestion($quiz_id, $id);
         return response()->json([
             "data" => $result,
             "error" => []
@@ -64,6 +84,7 @@ class QuestionAnswerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id' => 'integer',
+            'quiz_id' => 'required|integer|exists:quiz,quiz_id',
             'answer_id' => 'required|integer|exists:answer,answer_id'
         ]);
 
@@ -74,10 +95,12 @@ class QuestionAnswerController extends Controller
             ], 400);
         }
 
+        $quiz_id = $request->input('quiz_id');
         $answer_id = $request->input('answer_id');
 
         $data = array(
             'question_id' => $id,
+            'quiz_id' => $quiz_id,
             'answer_id' => $answer_id
         );
 

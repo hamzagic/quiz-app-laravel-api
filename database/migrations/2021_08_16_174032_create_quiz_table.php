@@ -15,7 +15,7 @@ class CreateQuizTable extends Migration
     {
         Schema::create('quiz', function (Blueprint $table) {
             $table->id('quiz_id');
-            $table->string('quiz_name', 100);
+            $table->string('quiz_name', 100)->unique();
             $table->boolean('back_button')->default(true);
             $table->integer('questions_per_page');
             $table->date('start_date');

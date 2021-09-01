@@ -30,7 +30,6 @@ class CreateClassQuestionAnswerTables extends Migration
             $table->id('question_id');
             $table->string('question_title', 255);
             $table->integer('alternatives_length');
-            $table->string('correct_answer_id')->references('answer_id')->on('answer');
             $table->boolean('question_active')->default(true);
             $table->timestamps();
         });

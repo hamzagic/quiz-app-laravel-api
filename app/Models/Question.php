@@ -22,7 +22,6 @@ class Question extends Model
     protected $fillable = [
         'question_title',
         'alternatives_length',
-        'correct_answer_id',
         'question_active'
     ];
 
@@ -32,7 +31,6 @@ class Question extends Model
             $question = DB::table('question')->insertGetId([
                 'question_title' => $data['title'],
                 'alternatives_length' => $data['alternatives_length'],
-                'correct_answer_id' => $data['correct_answer_id'],
                 'created_at' => Carbon::now()
             ]);
             $result = $this->getById($question);
@@ -45,7 +43,6 @@ class Question extends Model
     public function list()
     {
         $question = DB::table('question')
-        ->join('answer', 'answer.answer_id', '=', 'question.correct_answer_id')
         ->select('*')
         ->get();
 
@@ -68,7 +65,6 @@ class Question extends Model
     public function getByIdFull($id)
     {
         $question = DB::table('question')
-        ->join('answer', 'answer.answer_id', '=', 'question.correct_answer_id')
         ->select('*')
         ->where('question.question_id', '=', $id)
         ->get();
@@ -98,7 +94,6 @@ class Question extends Model
             ->update([
                 'question_title' => $data['title'],
                 'alternatives_length' => $data['alternatives_length'],
-                'correct_answer_id' => $data['correct_answer_id'],
                 'updated_at' => Carbon::now()
             ]);
             $question = $this->getById($id);
@@ -134,11 +129,6 @@ class Question extends Model
             'id' => $table->question_id,
             'question_title' => $table->question_title,
             'alternatives_length' => $table->alternatives_length,
-            'correct_answer' => [
-                'answer_id' => $table->correct_answer_id,
-                'answer_content' => $table->answer_content,
-                'answer_active' => $table->answer_active
-            ],
             'active' => $table->question_active,
             'created_at' => $table->created_at,
             'updated_at' => $table->updated_at,
