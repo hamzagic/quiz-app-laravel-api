@@ -94,7 +94,7 @@ class QuestionAnswer extends Model
         return $result;
     }
 
-    public function toggleCorrectAnswer($data)
+    public function setCorrectAnswer($data)
     {
         $quizQuestionExists = $this->checkIfQuizQuestionExists($data['quiz_id'], $data['question_id']);
         if ($quizQuestionExists == 0) throw new Exception('Question is not included on quiz yet');
@@ -102,15 +102,45 @@ class QuestionAnswer extends Model
         $groupExists = $this->checkIfGroupExists($data['quiz_id'], $data['question_id'], $data['answer_id']);
         if ($groupExists == 0) throw new Exception('Could not find answer in the quiz/question');
 
-        $questionAnswer = $this->getByTableIds($data['quiz_id'], $data['question_id'], $data['answer_id']);
+        $correctAnswerCount = $this->checkIfIsCorrectOnQuizQuestionExists($data['quiz_id'], $data['question_id']);
+
+        if ($correctAnswerCount > 0) throw new Exception('There is already a correct answer - please verify');
 
         DB::table('question_answer')
         ->where('quiz_id', '=', $data['quiz_id'])
         ->where('question_id', '=', $data['question_id'])
         ->where('answer_id', '=', $data['answer_id'])
         ->update([
-            'is_answer_correct' => !$questionAnswer->is_answer_correct
+            'is_answer_correct' => 1
         ]);
+    }
+
+    public function removeCorrectFromAnswer($data)
+    {
+        $quizQuestionExists = $this->checkIfQuizQuestionExists($data['quiz_id'], $data['question_id']);
+        if ($quizQuestionExists == 0) throw new Exception('Question is not included on quiz yet');
+
+        $groupExists = $this->checkIfGroupExists($data['quiz_id'], $data['question_id'], $data['answer_id']);
+        if ($groupExists == 0) throw new Exception('Could not find answer in the quiz/question');
+
+        DB::table('question_answer')
+        ->where('quiz_id', '=', $data['quiz_id'])
+        ->where('question_id', '=', $data['question_id'])
+        ->where('answer_id', '=', $data['answer_id'])
+        ->update([
+            'is_answer_correct' => 0
+        ]);
+    }
+
+    public function checkIfIsCorrectOnQuizQuestionExists($quiz_id, $question_id)
+    {
+        $result = DB::table('question_answer')
+        ->where('quiz_id', '=', $quiz_id)
+        ->where('question_id', '=', $question_id)
+        ->where('is_answer_correct', '=', 1)
+        ->count();
+
+        return $result;
     }
 
     public function checkIfQuestionExists($id)

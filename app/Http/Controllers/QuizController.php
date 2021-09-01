@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -137,7 +138,7 @@ class QuizController extends Controller
         ]);
     }
 
-    public function updateActiveStatus($id)
+    public function publishQuiz($id)
     {
         $validator = Validator::make(['id' => $id], [
             'id' => 'Integer'
@@ -151,14 +152,47 @@ class QuizController extends Controller
         }
 
         $quiz = new Quiz();
-        $response = $quiz->deleteQuiz($id);
+        try {
+            $response = $quiz->publishQuiz($id);
+
+            if (!$response) return response()->json([
+                "data" => [],
+                "error" => "Id not found"
+            ], 400);
+            return response()->json([
+                "data" => "quiz published successfully",
+                "error" => []
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                "data" => [],
+                "error" => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function unpublishQuiz($id)
+    {
+        $validator = Validator::make(['id' => $id], [
+            'id' => 'Integer'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "data" => [],
+                "error" => $validator->errors()->all()
+            ], 400);
+        }
+
+        $quiz = new Quiz();
+        $response = $quiz->unpublishQuiz($id);
 
         if (!$response) return response()->json([
             "data" => [],
             "error" => "Id not found"
         ], 400);
         return response()->json([
-            "data" => "quiz status updated successfully",
+            "data" => "quiz unpublished successfully",
             "error" => []
         ]);
     }

@@ -21,7 +21,7 @@ class CreateQuizTable extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->integer('total_questions');
-            $table->boolean('active')->default(true);
+            $table->boolean('active')->default(false);
             $table->timestamps();
         });
     }

@@ -11,5 +11,7 @@ Route::get('/quiz/{id}', [QuizController::class, 'getById']);
 
 Route::post('/quiz/{id}', [QuizController::class, 'update']);
 
-Route::post('/quiz/status/{id}', [QuizController::class, 'updateActiveStatus']);
+Route::post('/quiz/status/{id}', [QuizController::class, 'unpublishQuiz']);
+
+Route::post('/quiz/publish/{id}', [QuizController::class, 'publishQuiz']);
 

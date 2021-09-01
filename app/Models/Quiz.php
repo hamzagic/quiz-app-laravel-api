@@ -96,24 +96,58 @@ class Quiz extends Model
         }
     }
 
-    public function deleteQuiz($id)
+    public function publishQuiz($id)
     {
         $quiz = $this->getByIdCount($id);
         if ($quiz == 0) return false;
 
-        $active = $this->getById($id);
+        $correctAnswerSet = $this->checkCorrectAnswerSet($id);
+        if ($correctAnswerSet != 1) throw new Exception("All questions must have exactly one correct answer");
 
         try {
             DB::table('quiz')
             ->where('quiz_id', '=', $id)
             ->update([
-                'active' => !$active->active
+                'active' => 0
             ]);
             return true;
 
         } catch (Exception $e) {
             return $e->getMessage();
         }
+    }
+
+    public function unpublishQuiz($id)
+    {
+        $quiz = $this->getByIdCount($id);
+        if ($quiz == 0) return false;
+
+        try {
+            DB::table('quiz')
+            ->where('quiz_id', '=', $id)
+            ->update([
+                'active' => 0
+            ]);
+            return true;
+
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function deleteQuiz($id)
+    {
+
+    }
+
+    public function checkCorrectAnswerSet($id)
+    {
+        $result = DB::table('question_answer')
+        ->where('quiz_id', '=', $id)
+        ->where('is_answer_correct', '=', 1)
+        ->count();
+
+        return $result;
     }
 
     public $timestamps = true;
