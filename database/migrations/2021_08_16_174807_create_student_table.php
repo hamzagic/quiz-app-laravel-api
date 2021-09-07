@@ -29,7 +29,9 @@ class CreateStudentTable extends Migration
             $table->string('staff_first_name', 255);
             $table->string('staff_last_name', 255);
             $table->string('staff_email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->rememberToken();
             $table->boolean('staff_active')->default(true);
             $table->integer('role_id')->references('role_id')->on('role');
             $table->integer('subject_id')->references('subject_id')->on('subject')->nullable();
@@ -39,8 +41,8 @@ class CreateStudentTable extends Migration
             $table->id('school_id');
             $table->string('school_name', 255);
             $table->string('school_address');
-            $table->boolean('school_active')->default(true);
-            $table->integer('staff_id')->references('staff_id')->on('staff');
+            $table->boolean('school_active')->default(false);
+            $table->integer('staff_id')->references('staff_id')->on('staff')->nullable();
             $table->timestamps();
         });
         Schema::create('student', function (Blueprint $table) {
@@ -48,8 +50,10 @@ class CreateStudentTable extends Migration
             $table->string('student_first_name', 255);
             $table->string('student_last_name', 255);
             $table->string('student_email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('student_active')->default(true);
+            $table->rememberToken();
+            $table->boolean('student_active')->default(false);
             $table->integer('school_id')->references('school_id')->on('school');
             $table->timestamps();
         });
