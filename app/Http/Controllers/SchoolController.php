@@ -13,6 +13,7 @@ class SchoolController extends Controller
         $validator = Validator::make($request->all(), [
             'school_name' => 'required|min:3|max:255|String',
             'address' => 'required|min:3|max:255|String',
+            'phone' => 'required|digits:10|Numeric',
             'staff_id' => 'integer|exists:staff,staff_id',
         ]);
 
@@ -34,24 +35,24 @@ class SchoolController extends Controller
         );
 
         $school = new School();
-        try {
-            $result = $school->create($data);
+        // try {
+        //     $result = $school->create($data);
 
-            if (!$result) return response()->json([
-                "data" => [],
-                "error" => "could not create school"
-            ], 400);
+        //     if (!$result) return response()->json([
+        //         "data" => [],
+        //         "error" => "could not create school"
+        //     ], 400);
 
-            return response()->json([
-                "data" => $result,
-                "error" => []
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                "data" => [],
-                "error" => $e->getMessage()
-            ]);
-        }
+        //     return response()->json([
+        //         "data" => $result,
+        //         "error" => []
+        //     ]);
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         "data" => [],
+        //         "error" => $e->getMessage()
+        //     ]);
+        // }
 
     }
 
@@ -101,6 +102,7 @@ class SchoolController extends Controller
             'id' => 'integer',
             'school_name' => 'required|min:3|max:255|String',
             'address' => 'required|min:3|max:255|String',
+            'phone' => 'required|min:10|max:10|String',
             'staff_id' => 'integer|exists:staff,staff_id',
         ]);
 

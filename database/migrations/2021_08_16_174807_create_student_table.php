@@ -41,6 +41,7 @@ class CreateStudentTable extends Migration
             $table->id('school_id');
             $table->string('school_name', 255);
             $table->string('school_address');
+            $table->string('phone_number');
             $table->boolean('school_active')->default(false);
             $table->integer('staff_id')->references('staff_id')->on('staff')->nullable();
             $table->timestamps();
