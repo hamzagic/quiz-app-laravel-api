@@ -35,6 +35,7 @@ class CreateStudentTable extends Migration
             $table->boolean('staff_active')->default(true);
             $table->integer('role_id')->references('role_id')->on('role');
             $table->integer('subject_id')->references('subject_id')->on('subject')->nullable();
+            $table->integer('school_id')->references('school_id')->on('school')->nullable();
             $table->timestamps();
         });
         Schema::create('school', function (Blueprint $table) {
