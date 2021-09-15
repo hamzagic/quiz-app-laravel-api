@@ -18,7 +18,7 @@ class RoleController extends Controller
             return response()->json([
                 "data" => [],
                 "error" => $validator->errors()->all()
-            ]);
+            ], 400);
         }
 
         $name = $request->input('name');

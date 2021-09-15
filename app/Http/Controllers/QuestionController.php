@@ -19,7 +19,7 @@ class QuestionController extends Controller
             return response()->json([
                 "data" => [],
                 "error" => $validator->errors()->all()
-            ]);
+            ], 400);
         }
 
         $title = $request->input('title');

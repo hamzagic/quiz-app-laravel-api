@@ -14,46 +14,46 @@ class SchoolController extends Controller
             'school_name' => 'required|min:3|max:255|String',
             'address' => 'required|min:3|max:255|String',
             'phone' => 'required|digits:10|Numeric',
-            'staff_id' => 'integer|exists:staff,staff_id',
+           // 'staff_id' => 'integer|exists:staff,staff_id',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 "data" => [],
                 "error" => $validator->errors()->all()
-            ]);
+            ], 400);
         }
 
         $school_name = $request->input('school_name');
         $address = $request->input('address');
-        $staff_id = $request->input('staff_id');
+       // $staff_id = $request->input('staff_id');
+        $phone = $request->input('phone');
 
         $data = array(
             'school_name' => $school_name,
             'address' => $address,
-            'staff_id' => $staff_id
+            'phone' => $phone
         );
 
         $school = new School();
-        // try {
-        //     $result = $school->create($data);
+        try {
+            $result = $school->create($data);
 
-        //     if (!$result) return response()->json([
-        //         "data" => [],
-        //         "error" => "could not create school"
-        //     ], 400);
+            if (!$result) return response()->json([
+                "data" => [],
+                "error" => "could not create school"
+            ], 400);
 
-        //     return response()->json([
-        //         "data" => $result,
-        //         "error" => []
-        //     ]);
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         "data" => [],
-        //         "error" => $e->getMessage()
-        //     ]);
-        // }
-
+            return response()->json([
+                "data" => $result,
+                "error" => []
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "data" => [],
+                "error" => $e->getMessage()
+            ]);
+        }
     }
 
     public function list()

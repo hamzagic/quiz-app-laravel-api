@@ -41,14 +41,14 @@ class Staff extends Model
     // todo create method to update password
     public function create($data)
     {
-        $emailExists = $this->checkIfEmailExists($data['email']);
+        $emailExists = $this->checkIfEmailExists(strtolower($data['email']));
         if ($emailExists > 0) throw new Exception('Email already exists');
 
         try {
             $staff = DB::table('staff')->insertGetId([
                 'staff_first_name' => $data['first_name'],
                 'staff_last_name' => $data['last_name'],
-                'staff_email' => $data['email'],
+                'staff_email' => strtolower($data['email']),
                 'password' => $data['password'],
                 'role_id' => $data['role_id'],
                 'subject_id' => $data['subject_id'],
@@ -128,7 +128,7 @@ class Staff extends Model
             ->update([
                 'staff_first_name' => $data['first_name'],
                 'staff_last_name' => $data['last_name'],
-                'staff_email' => $data['email'],
+                'staff_email' => strtolower($data['email']),
                 'staff_role_id' => $data['role_id'],
                 'staff_subject_id' => $data['subject_id'],
                 'updated_at' => Carbon::now()

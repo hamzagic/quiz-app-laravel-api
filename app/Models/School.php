@@ -35,7 +35,8 @@ class School extends Model
             $school = DB::table('school')->insertGetId([
                 'school_name' => $data['school_name'],
                 'school_address' => $data['address'],
-                'staff_id' => $data['staff_id'],
+                //'staff_id' => $data['staff_id'],
+                'phone_number' => $data['phone'],
                 'created_at' => Carbon::now()
             ]);
             $result = $this->getById($school);
@@ -81,8 +82,8 @@ class School extends Model
     public function getByIdFull($id)
     {
         $school = DB::table('school')
-        ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
-        ->join('role', 'role.role_id', '=', 'staff.role_id')
+      //  ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
+      //  ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
         ->where('school.school_id', '=', $id)
         ->get();
@@ -112,7 +113,7 @@ class School extends Model
             ->update([
                 'school_name' => $data['school_name'],
                 'school_address' => $data['address'],
-                'staff_id' => $data['staff_id'],
+                'phone_number' => $data['phone'],
                 'updated_at' => Carbon::now()
             ]);
             $school = $this->getById($id);

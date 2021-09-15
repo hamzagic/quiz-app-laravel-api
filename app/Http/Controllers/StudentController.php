@@ -22,7 +22,7 @@ class StudentController extends Controller
             return response()->json([
                 "data" => [],
                 "error" => $validator->errors()->all()
-            ]);
+            ], 400);
         }
 
         $first_name = $request->input('first_name');

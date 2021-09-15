@@ -18,7 +18,7 @@ class AnswerController extends Controller
             return response()->json([
                 "data" => [],
                 "error" => $validator->errors()->all()
-            ]);
+            ], 400);
         }
 
         $content = $request->input('content');

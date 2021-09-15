@@ -41,14 +41,14 @@ class Student extends Model
     // todo create method to update password
     public function create($data)
     {
-        $emailExists = $this->checkIfEmailExists($data['email']);
+        $emailExists = $this->checkIfEmailExists(strtolower($data['email']));
         if ($emailExists > 0) throw new Exception('Email already exists');
 
         try {
             $student = DB::table('student')->insertGetId([
                 'student_first_name' => $data['first_name'],
                 'student_last_name' => $data['last_name'],
-                'student_email' => $data['email'],
+                'student_email' => strtolower($data['email']),
                 'password' => $data['password'],
                 'school_id' => $data['school_id'],
                 'created_at' => Carbon::now()
@@ -129,7 +129,7 @@ class Student extends Model
             ->update([
                 'student_first_name' => $data['first_name'],
                 'student_last_name' => $data['last_name'],
-                'student_email' => $data['email'],
+                'student_email' => strtolower($data['email']),
                 'school_id' => $data['school_id'],
                 'updated_at' => Carbon::now()
             ]);
