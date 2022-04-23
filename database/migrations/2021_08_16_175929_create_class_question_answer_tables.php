@@ -22,12 +22,15 @@ class CreateClassQuestionAnswerTables extends Migration
         });
         Schema::create('answer', function (Blueprint $table) {
             $table->id('answer_id');
+            $table->integer('question_id')->references('question_id')->on('question');
             $table->string('answer_content');
             $table->boolean('answer_active')->default(true);
+            $table->boolean('answer_is_correct')->default(false);
             $table->timestamps();
         });
         Schema::create('question', function (Blueprint $table) {
             $table->id('question_id');
+            $table->integer('quiz_id')->references('quiz_id')->on('quiz');
             $table->string('question_title', 255);
             $table->integer('alternatives_length');
             $table->boolean('question_active')->default(true);

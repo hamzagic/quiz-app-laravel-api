@@ -23,6 +23,7 @@ class School extends Model
         'school_name',
         'school_address',
         'school_active',
+        'phone_number',
         'staff_id'
     ];
 
@@ -149,6 +150,7 @@ class School extends Model
             'id' => $table->school_id,
             'name' => $table->school_name,
             'address' => $table->school_address,
+            'phone_number' => $table->phone_number,
             // 'staff' => [
             //     'staff_id' => $table->staff_id,
             //     'staff_first_name' => $table->staff_first_name,

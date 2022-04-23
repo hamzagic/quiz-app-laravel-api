@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
 require_once base_path('routes/endpoints/role.php');
 require_once base_path('routes/endpoints/subject.php');
 require_once base_path('routes/endpoints/staff.php');
@@ -25,7 +26,8 @@ require_once base_path('routes/endpoints/question.php');
 require_once base_path('routes/endpoints/answer.php');
 require_once base_path('routes/endpoints/quiz_question.php');
 require_once base_path('routes/endpoints/question_answer.php');
+*/
 
-Route::get('/', function () {
-    return 'Quiz api';
-});
+// Route::get('/', function () {
+//     return 'Quiz api';
+// });

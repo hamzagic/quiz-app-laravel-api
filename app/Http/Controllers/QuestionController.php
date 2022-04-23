@@ -11,6 +11,7 @@ class QuestionController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'quiz_id' => 'required|integer|exists:quiz,quiz_id',
             'title' => 'required|min:3|max:255|String',
             'alternatives_length' => 'required|integer'
         ]);
@@ -22,10 +23,12 @@ class QuestionController extends Controller
             ], 400);
         }
 
+        $quiz_id = $request->input('quiz_id');
         $title = $request->input('title');
         $alternatives_length = $request->input('alternatives_length');
 
         $data = array(
+            'quiz_id' => $quiz_id,
             'title' => $title,
             'alternatives_length' => $alternatives_length
         );
@@ -96,8 +99,9 @@ class QuestionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id' => 'integer',
+            'quiz_id' => 'required|integer|exists:quiz,quiz_id',
             'title' => 'required|min:3|max:255|String',
-            'alternatives_length' => 'required|integer',
+            'alternatives_length' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
@@ -106,12 +110,15 @@ class QuestionController extends Controller
                 "error" => $validator->errors()->all()
             ]);
         }
+
+        $quiz_id = $request->input('quiz_id');
         $title = $request->input('title');
         $alternatives_length = $request->input('alternatives_length');
 
         $data = array(
+            'quiz_id' => $quiz_id,
             'title' => $title,
-            'alternatives_length' => $alternatives_length,
+            'alternatives_length' => $alternatives_length
         );
 
         $question = new Question();

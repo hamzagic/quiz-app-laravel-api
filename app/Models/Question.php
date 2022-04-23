@@ -22,13 +22,15 @@ class Question extends Model
     protected $fillable = [
         'question_title',
         'alternatives_length',
-        'question_active'
+        'question_active',
+        'quiz_id'
     ];
 
     public function create($data)
     {
         try {
             $question = DB::table('question')->insertGetId([
+                'quiz_id' => $data['quiz_id'],
                 'question_title' => $data['title'],
                 'alternatives_length' => $data['alternatives_length'],
                 'created_at' => Carbon::now()
@@ -43,6 +45,7 @@ class Question extends Model
     public function list()
     {
         $question = DB::table('question')
+        ->join('quiz', 'quiz.quiz_id', '=', 'question.quiz_id')
         ->select('*')
         ->get();
 
@@ -56,6 +59,7 @@ class Question extends Model
 
     public function getById($id) {
         $question = DB::table('question')
+        ->join('quiz', 'quiz.quiz_id', '=', 'question.quiz_id')
         ->where('question_id', '=', $id)
         ->first();
 
@@ -65,6 +69,7 @@ class Question extends Model
     public function getByIdFull($id)
     {
         $question = DB::table('question')
+        ->join('quiz', 'quiz.quiz_id', '=', 'question.quiz_id')
         ->select('*')
         ->where('question.question_id', '=', $id)
         ->get();
@@ -127,6 +132,17 @@ class Question extends Model
     {
         $response = array(
             'id' => $table->question_id,
+            'quiz' => [
+                'quiz_id' => $table->quiz_id,
+                'quiz_name' => $table->quiz_name,
+                'back_button' => $table->back_button,
+                'questions_per_page' => $table->questions_per_page,
+                'start_date' => $table->start_date,
+                'end_date' => $table->end_date,
+                'total_questions' => $table->total_questions,
+                'active' => $table->active,
+                'created_at' => $table->created_at
+            ],
             'question_title' => $table->question_title,
             'alternatives_length' => $table->alternatives_length,
             'active' => $table->question_active,

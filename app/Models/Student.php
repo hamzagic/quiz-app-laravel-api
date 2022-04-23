@@ -73,8 +73,8 @@ class Student extends Model
     {
         $student = DB::table('student')
         ->join('school', 'school.school_id', '=', 'student.school_id')
-        ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
-        ->join('role', 'role.role_id', '=', 'staff.role_id')
+        // ->join('staff', 'staff.staff_id', '=', 'school.staff_id')
+        // ->join('role', 'role.role_id', '=', 'staff.role_id')
         ->select('*')
         ->get();
 
@@ -172,17 +172,17 @@ class Student extends Model
                 'school_name' => $table->school_name,
                 'school_address' => $table->school_address,
                 'school_active' => $table->school_active,
-                'school_staff' => [
-                    'staff_id' => $table->staff_id,
-                    'staff_first_name' => $table->staff_first_name,
-                    'staff_last_name' => $table->staff_last_name,
-                    'staff_email' => $table->staff_email,
-                    'staff_active' => $table->staff_active,
-                    'staff_role' => [
-                        'staff_role_id' => $table->role_id,
-                        'staff_role_title' => $table->role_title
-                    ]
-                ],
+                // 'school_staff' => [
+                //     'staff_id' => $table->staff_id,
+                //     'staff_first_name' => $table->staff_first_name,
+                //     'staff_last_name' => $table->staff_last_name,
+                //     'staff_email' => $table->staff_email,
+                //     'staff_active' => $table->staff_active,
+                //     'staff_role' => [
+                //         'staff_role_id' => $table->role_id,
+                //         'staff_role_title' => $table->role_title
+                //     ]
+                // ],
             ],
             'active' => $table->student_active,
             'created_at' => $table->created_at,

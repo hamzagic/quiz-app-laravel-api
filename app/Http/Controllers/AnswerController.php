@@ -11,7 +11,9 @@ class AnswerController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'content' => 'required|min:3|max:255|string'
+            'question_id' => 'required|integer|exists:question,question_id',
+            'content' => 'required|min:3|max:255|string',
+            'correct' => 'required|Boolean'
         ]);
 
         if ($validator->fails()) {
@@ -21,10 +23,14 @@ class AnswerController extends Controller
             ], 400);
         }
 
+        $question_id = $request->input('question_id');
         $content = $request->input('content');
+        $correct = $request->input('correct');
 
         $data = array(
-            'content' => $content
+            'question_id' => $question_id,
+            'content' => $content,
+            'correct' => $correct
         );
 
         $answer = new Answer();
