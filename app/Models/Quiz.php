@@ -53,8 +53,16 @@ class Quiz extends Model
 
     public function getById($id)
     {
-        $quiz = DB::table('quiz')->where('quiz_id', $id)->first();
-        return $quiz;
+        $quiz = DB::table('quiz')
+        ->where('quiz.quiz_id', $id)
+        ->first();
+
+        $questions = $this->getQuestionsList($id);
+        $result = array(
+            'quiz' => $quiz,
+            'questions' => $questions
+        );
+        return $result;
     }
 
     public function getByIdCount($id)
@@ -66,7 +74,17 @@ class Quiz extends Model
     public function list()
     {
         $quiz = DB::table('quiz')->get();
+
         return $quiz;
+    }
+
+    public function getQuestionsList($id)
+    {
+        $questions = DB::table('question')
+        ->where('quiz_id', $id)
+        ->get();
+
+        return $questions;
     }
 
     public function updateQuiz($data)
@@ -84,7 +102,6 @@ class Quiz extends Model
                     'end_date' => $data['end_date'],
                     'total_questions' => $data['total_questions'],
                     'updated_at' => Carbon::now(),
-                    'created_at' => $result->created_at
                 ]);
                 $result2 = $this->getById($data['id']);
                 return $result2;
