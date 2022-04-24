@@ -46,8 +46,8 @@ class Quiz extends Model
             $result = $this->getById($quiz);
             return $result;
         } catch(\Exception $e) {
-           return $e->getMessage();
-           // return false;
+           //return $e->getMessage();
+           return false;
         }
     }
 
